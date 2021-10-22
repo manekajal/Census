@@ -1,36 +1,34 @@
 package com.bl;
 
 
-import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
 
 public class StateCensusAnalyser {
-
+    private static String file_name="CsvStateCensus.csv";
 
       public static void main(String[] args) throws IOException {
-         final String file_name="/c/Users/KAJAL/IdeaProjects/Day29 DesignPrinciple/CsvStateCensus.csv";
 
-                    try{
-                          Reader reader = Files.newBufferedReader(Paths.get(file_name));
-                          CSVReader csvReader= new CSVReader(reader);
+          System.out.println("Hello Indian state :");
+                    try {
+                        Reader reader = Files.newBufferedReader(Paths.get(file_name));
+                        int count = 0;
 
-                          String nextLine[];
+                        CsvToBean<IndianCensus> csvToBean = new CsvToBeanBuilder(reader).withIgnoreLeadingWhiteSpace(true).withType(IndianCensus.class).build();
+                        Iterator<IndianCensus> stateIterator = csvToBean.iterator();
+                        while (stateIterator.hasNext()) {
+                            IndianCensus csvStates = stateIterator.next();
+                            count++;
+                        }
 
-                          while ((nextLine=csvReader.readNext())!=null) {
-                                System.out.println("id :" +nextLine[0]);
-                                System.out.println("State Name :" +nextLine[1]);
-                                System.out.println("TIN :" +nextLine[2]);
-
-                                System.out.println("State Code:" +nextLine[3]);
-                          }
                     }catch (IOException e){
-                          e.printStackTrace();
+                        e.printStackTrace();
                     }
-
       }
 }
